@@ -1,0 +1,8 @@
+curl https://httpbin.org/get
+curl "https://httpbin.org/get?name=Batman"
+curl "https://httpbin.org/get?name=Batman" -H "accept: application/json" -i
+curl -X GET "https://httpbin.org/get?name=Batman" -H "accept: application/json" -i
+
+curl -X POST https://httpbin.org/post -d "{\"name\": \"Batman\", \"password\": \"Robin\"}"
+
+curl -X PUT https://httpbin.org/put -d "{\"name\": \"Batman\", \"password\": \"Robin\"}"
