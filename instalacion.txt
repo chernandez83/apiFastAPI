@@ -1,1 +1,9 @@
 python -m venv env
+
+pip install Jinja2
+pip install fastapi
+pip install uvicorn
+pip install peewee
+pip install mysqlclient
+
+uvicorn main:app --reload
