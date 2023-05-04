@@ -1,9 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 from database import database as connection
 from database import User, Movie, UserReview
 
-from schemas import UserBaseModel
+from schemas import UserRequestModel, UserReponseModel
 
 app = FastAPI(title='Proyecto para reseñas',
               description='En ese proyecto se utiliza para aprender FastAPI',
@@ -39,11 +39,19 @@ async def about():
     return 'Servidor de entrenamiento'
 
 
-@app.post('/users/')
-async def create_user(user: UserBaseModel):
+@app.post('/users', response_model=UserReponseModel)
+async def create_user(user: UserRequestModel):
+    if User.select().where(User.username == user.username).exists():
+        raise HTTPException(409, 'El nombre de usuario ya se encuentra en uso')
+    
+    hash_passord = User.create_password(user.password)
     user = User.create(
         username=user.username,
-        password=user.password
+        password=hash_passord
     )
     
-    return user.id
+    # return {
+    #     'id': user.id,
+    #     'username': user.username,
+    # }
+    return UserReponseModel(id=user.id, username=user.username)
