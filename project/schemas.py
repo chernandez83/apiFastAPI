@@ -63,6 +63,24 @@ class MovieResponseModel(ResponseModel):
     #     getter_dict = PeeweeGetterDict
 
 
+# No hereda validaciones!
+# class ReviewValidator():
+    
+#     @validator('score')
+#     def score_validator(cls, score):
+#         if score < 1 or score > 5:
+#             raise ValueError('El score debe estar entre 1 y 5')
+        
+#         return score
+    
+#     @validator('review')
+#     def review_validator(cls, review):
+#         if len(review) < 3:
+#             raise ValueError('La longitud de la reseña no es válida')
+        
+#         return review
+
+
 class ReviewRequestModel(BaseModel):
     user_id: int
     movie_id: int
@@ -86,10 +104,30 @@ class ReviewRequestModel(BaseModel):
 
 class ReviewResponseModel(ResponseModel):
     id: int
-    movie_id: int
+    #movie_id: int
+    movie: MovieResponseModel
     review: str
     score: int
     
     # class Config:
     #     orm_mode = True
     #     getter_dict = PeeweeGetterDict
+
+
+class ReviewRequestPutModel(BaseModel):
+    review: str
+    score: int
+    
+    @validator('score')
+    def score_validator(cls, score):
+        if score < 1 or score > 5:
+            raise ValueError('El score debe estar entre 1 y 5')
+        
+        return score
+    
+    @validator('review')
+    def review_validator(cls, review):
+        if len(review) < 3:
+            raise ValueError('La longitud de la reseña no es válida')
+        
+        return review
