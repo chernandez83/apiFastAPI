@@ -4,6 +4,8 @@ from database import database as connection
 from database import User, Movie, UserReview
 
 from schemas import UserRequestModel, UserReponseModel
+from schemas import ReviewRequestModel, ReviewResponseModel
+from schemas import MovieRequestModel, MovieResponseModel
 
 app = FastAPI(title='Proyecto para reseñas',
               description='En ese proyecto se utiliza para aprender FastAPI',
@@ -54,4 +56,35 @@ async def create_user(user: UserRequestModel):
     #     'id': user.id,
     #     'username': user.username,
     # }
-    return UserReponseModel(id=user.id, username=user.username)
+    # return UserReponseModel(id=user.id, username=user.username)
+    return user
+
+@app.post('/movies', response_model=MovieResponseModel)
+async def create_movie(movie: MovieRequestModel):
+    if Movie.select().where(Movie.title == movie.title).exists():
+        raise HTTPException(409, 'La película ya existe')
+    
+    movie = Movie.create(
+        title=movie.title
+    )
+    
+    return movie
+
+
+@app.post('/reviews', response_model=ReviewResponseModel)
+async def create_review(user_review: ReviewRequestModel):
+    
+    if User.select().where(User.id == user_review.user_id).first() is None:
+        raise HTTPException(status_code=404, detail='El usuario no existe')
+    
+    if Movie.select().where(Movie.id == user_review.movie_id).first() is None:
+        raise HTTPException(status_code=404, detail='La película no existe')
+    
+    user_review = UserReview.create(
+        user_id=user_review.user_id,
+        movie_id=user_review.movie_id,
+        review=user_review.review,
+        score=user_review.score
+    )
+    
+    return user_review
