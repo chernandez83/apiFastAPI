@@ -1,0 +1,1 @@
+Token de usuario en cookie
