@@ -82,7 +82,7 @@ class MovieResponseModel(ResponseModel):
 
 
 class ReviewRequestModel(BaseModel):
-    user_id: int
+    # user_id: int
     movie_id: int
     review: str
     score: int

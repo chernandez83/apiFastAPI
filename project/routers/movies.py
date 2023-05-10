@@ -5,7 +5,7 @@ from ..database import Movie
 from ..schemas import MovieRequestModel, MovieResponseModel
 from ..schemas import ReviewResponseModel
 
-router = APIRouter(prefix='/movies')
+router = APIRouter(prefix='/movies', tags=['Movies'])
 
 
 @router.get('', response_model=List[MovieResponseModel])

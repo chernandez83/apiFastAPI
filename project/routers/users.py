@@ -1,14 +1,14 @@
 from typing import List
-from fastapi import HTTPException, APIRouter, Response, Depends, Cookie
+from fastapi import HTTPException, APIRouter, Response, Depends, Cookie, Header
 from fastapi.security import HTTPBasicCredentials
 
 from ..database import User
 from ..schemas import UserRequestModel, UserReponseModel
 from ..schemas import ReviewResponseModel
 
-from ..common import oauth2_schema
+from ..common import oauth2_schema, get_current_user
 
-router = APIRouter(prefix='/users')
+router = APIRouter(prefix='/users', tags=['Authentication'])
 
 
 @router.post('', response_model=UserReponseModel)
@@ -49,8 +49,16 @@ async def login(credentials: HTTPBasicCredentials, response: Response):
     
 #     return [user_review for user_review in user.reviews]
 
-@router.get('/reviews') #, response_model=List[ReviewResponseModel])
-async def get_reviews(token: str = Depends(oauth2_schema)):
-    return {
-        'token': token
-    }
+# @router.get('/reviews') #, response_model=List[ReviewResponseModel])
+# async def get_reviews(token: str = Depends(oauth2_schema)):
+#     return {
+#         'token': token
+#     }
+    
+    
+@router.get('/reviews', response_model=List[ReviewResponseModel])
+async def get_reviews(user: User = Depends(get_current_user)):
+    if user is None:
+        raise HTTPException(status_code=404, detail='Usuario no existe.')
+    
+    return [user_review for user_review in user.reviews]
