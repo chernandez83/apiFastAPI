@@ -5,5 +5,8 @@ pip install fastapi
 pip install uvicorn
 pip install peewee
 pip install mysqlclient
+pip install python-multipart
+pip install pyjwt
+pip install python-decouple python-dotenv
 
 uvicorn main:app --reload
